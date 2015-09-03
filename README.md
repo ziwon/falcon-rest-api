@@ -48,8 +48,8 @@ Activate virtualenv
   .venv/bin/activate
 ```
 
-Start service:
+Start service
 
 ```
-  bin/run.sh start
+  ./bin/run.sh start
 ```
