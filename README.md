@@ -68,11 +68,11 @@ curl -XPOST http://localhost:8000/v1/users -H "Content-Type: application/json" -
 
 Login user
 ```
-curl -XGET http://localhost:8000/v1/users/1 -d email=test1@gmail.com -d password=test1234
+curl -XGET http://localhost:8000/v1/users/self/login -d email=test1@gmail.com -d password=test1234
 {"id": "1", "username": "test1", "email": "test1@gmail.com", "modified": "2015-09-03 20:18:05.142613", "created": "2015-09-03 20:18:05.142613", "sid": "7027243698", "token": "gAAAAABV6Cxtz2qbcgOOzcjjyoBXBxJbjxwY2cSPdJB4gta07ZQXUU5NQ2BWAFIxSZlnlCl7wAwLe0RtBECUuV96RX9iiU63BP7wI1RQW-G3a1zilI3FHss="}
 ```
 
-Get other user
+Get other user with auth token
 ```
 curl -XGET http://localhost:8000/v1/users/100 -H "Authorization: gAAAAABV6Cxtz2qbcgOOzcjjyoBXBxJbjxwY2cSPdJB4gta07ZQXUU5NQ2BWAFIxSZlnlCl7wAwLe0RtBECUuV96RX9iiU63BP7wI1RQW-G3a1zilI3FHss="
 {"message": "user not found (id: 100)"}
