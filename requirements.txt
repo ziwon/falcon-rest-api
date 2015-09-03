@@ -1,0 +1,8 @@
+falcon==0.3
+gunicorn==19.3.0
+psycopg2==2.6.1
+sqlalchemy==1.0.8
+bcrypt==1.1.1
+itsdangerous==0.24
+shortuuid==0.4.2
+cryptography==0.9.3
