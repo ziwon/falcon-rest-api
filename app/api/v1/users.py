@@ -69,7 +69,7 @@ class Item(BaseResource):
         except NoResultFound:
             res.status = falcon.HTTP_404
             res.body = self.to_json({
-                'message': 'multiple user found'
+                'message': 'user not found (id: %s)' % user_id
             })
 
 
