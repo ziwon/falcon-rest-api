@@ -43,10 +43,10 @@ class Collection(BaseResource):
 
     def on_get(self, req, res):
         session = req.context['session']
-        users_db = session.query(User).all()
-        if users_db:
+        user_dbs = session.query(User).all()
+        if user_dbs:
             res.status = falcon.HTTP_200
-            res.body = self.from_db_to_json(users_db)
+            res.body = self.from_db_to_json([user.to_dict() for user in user_dbs])
         else:
             self.abort(falcon.HTTP_500, "Server error")
 
