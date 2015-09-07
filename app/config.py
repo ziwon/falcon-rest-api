@@ -24,7 +24,7 @@ else:
     DB_CONFIG = (POSTGRES['host'], POSTGRES['database'])
     DATABASE_URL = "postgresql+psycopg2://%s/%s" % DB_CONFIG
 
-DB_ECHO = True
+DB_ECHO = False
 DB_AUTOCOMMIT = True
 
 LOG_LEVEL = CONFIG['logging']['level']
