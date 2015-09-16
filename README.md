@@ -4,7 +4,7 @@ Simple Falcon Template with PostgreSQL for REST API
 
 (Falcon is a high-performance Python framework for building cloud APIs, smart proxies, and app backends. More information can be found [here](https://github.com/falconry/falcon/))
 
-Demo: https://falcon-rest-api.herokuapp.com/
+Demo: https://falcon-rest-api.herokuapp.com
 
 
 Requirements
