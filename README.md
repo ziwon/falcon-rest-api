@@ -17,10 +17,16 @@ sudo apt-get update
 sudo apt-get upgrade
 ```
 
-Install the required packages 
+Install required packages
 
 ```
 sudo apt-get install build-essential python-pip libffi-dev python-dev python3-dev libpq-dev
+```
+
+Install virtualenvwrapper for Python 3.4
+
+```
+sudo apt-get install python3.4-venv
 ```
 
 Mac
@@ -36,7 +42,7 @@ brew install postgres
 Installation
 ============
 
-Install all the project dependencies in requirements.txt
+Install all the python module dependencies in requirements.txt
 
 ```
   ./install.sh
@@ -47,7 +53,7 @@ Activate virtualenv
   .venv/bin/activate
 ```
 
-Start service
+Start server
 
 ```
   ./bin/run.sh start
