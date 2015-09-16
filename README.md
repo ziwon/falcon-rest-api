@@ -143,7 +143,7 @@ curl -XPOST http://localhost:8000/v1/users -H "Content-Type: application/json" -
 }
 ```
 
-- Get a buch collection of users with auth token
+- Get a collection of users with auth token
 ```
 curl -XGET http://localhost:8000/v1/users/100 -H "Authorization: gAAAAABV6Cxtz2qbcgOOzcjjyoBXBxJbjxwY2cSPdJB4gta07ZQXUU5NQ2BWAFIxSZlnlCl7wAwLe0RtBECUuV96RX9iiU63BP7wI1RQW-G3a1zilI3FHss="
 {
