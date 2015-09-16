@@ -3,25 +3,62 @@
 import re
 import falcon
 
-from sqlalchemy import or_
 from sqlalchemy.orm.exc import NoResultFound
+from cerberus import Validator
 
 from app import log
 from app.api.common import BaseResource
 from app.utils.hooks import auth_required
 from app.utils.auth import encrypt_token, hash_password, verify_password, uuid
 from app.model import User
+from app.errors import AppError, InvalidParameterError, UserNotExistsError, PasswordNotMatch
 
 LOG = log.get_logger()
+
+
+FIELDS = {
+    'username': {
+        'type': 'string',
+        'required': True,
+        'minlength': 4,
+        'maxlength': 20
+    },
+    'email': {
+        'type': 'string',
+        'regex': '[a-zA-Z0-9._-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,4}',
+        'required': True,
+        'maxlength': 320
+    },
+    'password': {
+        'type': 'string',
+        'regex': '[0-9a-zA-Z]\w{3,14}',
+        'required': True,
+        'minlength': 8,
+        'maxlength': 64
+    }
+}
+
+
+def validate_user_create(req, res, resource, params):
+    schema = {
+        'username': FIELDS['username'],
+        'email': FIELDS['email'],
+        'password': FIELDS['password']
+    }
+
+    v = Validator(schema)
+    if not v.validate(req.context['data']):
+        raise InvalidParameterError(v.errors)
 
 
 class Collection(BaseResource):
     """
     Handle for endpoint: /v1/users
     """
+    @falcon.before(validate_user_create)
     def on_post(self, req, res):
         session = req.context['session']
-        user_req = self.load_request(req, res)
+        user_req = req.context['data']
         if user_req:
             user = User()
             user.username = user_req['username']
@@ -31,24 +68,19 @@ class Collection(BaseResource):
             user.sid = sid
             user.token = encrypt_token(sid).decode('utf-8')
             session.add(user)
-
-            res.status = falcon.HTTP_201
-            res.body = self.to_json({
-                'meta': {
-                    'code': 201
-                }
-            })
+            self.on_success(res, None)
         else:
-            self.abort(falcon.HTTP_400, "Invalid Parameter")
+            raise InvalidParameterError(req.context['data'])
 
+    @falcon.before(auth_required)
     def on_get(self, req, res):
         session = req.context['session']
         user_dbs = session.query(User).all()
         if user_dbs:
-            res.status = falcon.HTTP_200
-            res.body = self.from_db_to_json([user.to_dict() for user in user_dbs])
+            obj = [user.to_dict() for user in user_dbs]
+            self.on_success(res, obj)
         else:
-            self.abort(falcon.HTTP_500, "Server error")
+            raise AppError()
 
     @falcon.before(auth_required)
     def on_put(self, req, res):
@@ -57,20 +89,16 @@ class Collection(BaseResource):
 
 class Item(BaseResource):
     """
-    Handle for endpoint: /v1/users/{user_id|user_sid}
+    Handle for endpoint: /v1/users/{user_id}
     """
     @falcon.before(auth_required)
     def on_get(self, req, res, user_id):
         session = req.context['session']
         try:
-            user_db = session.query(User).filter(or_(User.id == int(user_id), User.sid == user_id)).one()
-            res.status = falcon.HTTP_200
-            res.body = self.to_json(user_db.to_dict())
+            user_db = User.find_one(session, user_id)
+            self.on_success(res, user_db.to_dict())
         except NoResultFound:
-            res.status = falcon.HTTP_404
-            res.body = self.to_json({
-                'message': 'user not found (id: %s)' % user_id
-            })
+            raise UserNotExistsError('user id: %s' % user_id)
 
 
 class Self(BaseResource):
@@ -92,20 +120,14 @@ class Self(BaseResource):
         password = req.params['password']
         session = req.context['session']
         try:
-            user_db = session.query(User).filter(User.email == email).one()
+            user_db = User.find_by_email(session, email)
             if verify_password(password, user_db.password.encode('utf-8')):
-                res.status = falcon.HTTP_200
-                res.body = self.to_json(user_db.to_dict())
+                self.on_success(res, user_db.to_dict())
             else:
-                res.status = falcon.HTTP_401
-                res.body = self.to_json({
-                    'message': 'password not match'
-                })
+                raise PasswordNotMatch()
+
         except NoResultFound:
-            res.status = falcon.HTTP_404
-            res.body = self.to_json({
-                'message': 'user not exists'
-            })
+            raise UserNotExistsError('User email: %s' % email)
 
     @falcon.before(auth_required)
     def process_resetpw(self, req, res):

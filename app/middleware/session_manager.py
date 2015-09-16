@@ -5,15 +5,16 @@ import sqlalchemy.orm.scoping as scoping
 from sqlalchemy.exc import SQLAlchemyError
 
 from app import log
+from app import config
+from app.errors import DatabaseError, ERR_DATABASE_ROLLBACK
 
 LOG = log.get_logger()
 
 
 class DatabaseSessionManager(object):
-    def __init__(self, session_factory, auto_commit=False):
-        self._session_factory = session_factory
-        self._scoped = isinstance(session_factory, scoping.ScopedSession)
-        self._auto_commit = auto_commit
+    def __init__(self, db_session):
+        self._session_factory = db_session
+        self._scoped = isinstance(db_session, scoping.ScopedSession)
 
     def process_request(self, req, res, resource=None):
         """
@@ -27,12 +28,12 @@ class DatabaseSessionManager(object):
         """
         session = req.context['session']
 
-        if self._auto_commit:
+        if config.DB_AUTOCOMMIT:
             try:
                 session.commit()
-            except SQLAlchemyError:
+            except SQLAlchemyError as ex:
                 session.rollback()
-                raise falcon.HTTPError(falcon.HTTP_500, 'DB Error')
+                raise DatabaseError(ERR_DATABASE_ROLLBACK, ex.args, ex.params)
 
         if self._scoped:
             session.rollback()

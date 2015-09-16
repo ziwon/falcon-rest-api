@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function start () {
-  gunicorn --reload app.main:application
+  gunicorn -b 127.0.0.1:5000 --reload app.main:application
 }
 
 function stop () {

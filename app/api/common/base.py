@@ -3,19 +3,27 @@
 import falcon
 import json
 
+try:
+    from collections import OrderedDict
+except ImportError:
+    OrderedDict = dict
+
 from app import log
 from app.utils.alchemy import  new_alchemy_encoder
+from app.config import BRAND_NAME, POSTGRES
+from app.database import engine
+from app.errors import NotSupportedError, InvalidParameterError
 
 LOG = log.get_logger()
 
-CONTENT_TYPE_URL_ENCODED = 'application/x-www-form-urlencoded'
-CONTENT_TYPE_JSON = 'application/json'
-
 
 class BaseResource(object):
+    HELLO_WORLD = {
+        'server': '%s' % BRAND_NAME,
+        'database': '%s (%s)' % (engine.name, POSTGRES['host'])
+    }
 
     def to_json(self, body_dict):
-        LOG.info("dict=%s", body_dict)
         return json.dumps(body_dict)
 
     def from_db_to_json(self, db):
@@ -24,32 +32,40 @@ class BaseResource(object):
     def abort(self, status=falcon.HTTP_500, message=None):
         raise falcon.HTTPError(status, message)
 
-    def load_request(self, req, res):
-        if req.content_length in (None, 0):
-            return
+    def on_error(self, res, error=None):
+        res.status = error['status']
+        meta = OrderedDict()
+        meta['code'] = error['code']
+        meta['message'] = error['message']
 
-        if req.content_type == CONTENT_TYPE_JSON:
-            try:
-                raw_json = req.stream.read()
-            except Exception:
-                self.abort(falcon.HTTP_500, 'Read Error')
+        obj = OrderedDict()
+        obj['meta'] = meta
+        res.body = self.to_json(obj)
 
-            try:
-                obj = json.loads(raw_json.decode('utf-8'))
-            except (ValueError, UnicodeDecodeError):
-                self.abort(falcon.HTTP_753, 'Malformed JSON')
-            return obj
-        elif req.content_type == CONTENT_TYPE_URL_ENCODED:
-            return
+    def on_success(self, res, data=None):
+        res.status = falcon.HTTP_200
+        meta = OrderedDict()
+        meta['code'] = 200
+        meta['message'] = 'OK'
+
+        obj = OrderedDict()
+        obj['meta'] = meta
+        obj['data'] = data
+        res.body = self.to_json(obj)
 
     def on_get(self, req, res):
-        res.status = falcon.HTTP_404
+        if req.path == '/':
+            res.status = falcon.HTTP_200
+            res.body = self.to_json(self.HELLO_WORLD)
+        else:
+            raise NotSupportedError(method='GET', url=req.path)
 
     def on_post(self, req, res):
-        res.status = falcon.HTTP_404
+        raise NotSupportedError(method='POST', url=req.path)
 
     def on_put(self, req, res):
-        res.status = falcon.HTTP_404
+        raise NotSupportedError(method='PUT', url=req.path)
 
     def on_delete(self, req, res):
-        res.status = falcon.HTTP_404
+        raise NotSupportedError(method='DELETE', url=req.path)
+

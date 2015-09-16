@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import json
+import time
+import datetime
+
 from sqlalchemy.ext.declarative import DeclarativeMeta
 
 
@@ -25,3 +28,14 @@ def new_alchemy_encoder():
 
             return json.JSONEncoder.default(self, obj)
     return AlchemyEncoder
+
+
+def passby(data):
+    return data
+
+
+def datetime_to_timestamp(date):
+    if isinstance(date, datetime.date):
+        return int(time.mktime(date.timetuple()))
+    else:
+        return None

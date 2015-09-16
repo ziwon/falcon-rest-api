@@ -4,6 +4,9 @@ import os
 import configparser
 from itertools import chain
 
+
+BRAND_NAME = 'Falcon REST API Template'
+
 SECRET_KEY = 'xs4G5ZD9SwNME6nWRWrK_aq6Yb9H8VJpdwCzkTErFPw='
 UUID_LEN = 10
 UUID_ALPHABET = ''.join(map(chr, range(48, 58)))
@@ -24,7 +27,7 @@ else:
     DB_CONFIG = (POSTGRES['host'], POSTGRES['database'])
     DATABASE_URL = "postgresql+psycopg2://%s/%s" % DB_CONFIG
 
-DB_ECHO = False
+DB_ECHO = True if CONFIG['database']['echo'] == 'yes' else False
 DB_AUTOCOMMIT = True
 
 LOG_LEVEL = CONFIG['logging']['level']

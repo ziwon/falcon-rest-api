@@ -3,17 +3,18 @@
 from __future__ import absolute_import
 
 from sqlalchemy import Column
-from sqlalchemy import Integer, Float, DateTime, ForeignKey, func
+from sqlalchemy import DateTime, func
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
+from sqlalchemy.exc import SQLAlchemyError
 
 from app import log
+from app.utils import alchemy
+from app.errors import DatabaseError, ERR_UNKNOWN
 
 LOG = log.get_logger()
 
 
 class BaseModel(object):
-
-    id = Column(Integer, primary_key=True)
     created = Column(DateTime, default=func.now())
     modified = Column(DateTime, default=func.now(), onupdate=func.now())
 
@@ -28,6 +29,21 @@ class BaseModel(object):
             l.append(cls.__dict__[k])
         return l
 
+    @classmethod
+    def find_one(cls, session, id):
+        try:
+            return session.query(cls).filter(cls.get_id() == id).one()
+        except SQLAlchemyError as ex:
+            raise DatabaseError(ERR_UNKNOWN, ex.args)
+
+    @classmethod
+    def find_update(cls, session, id, args):
+        return session.query(cls).filter(cls.get_id() == id).update(args, synchronize_session=False)
+
+    @classmethod
+    def get_id(cls):
+        pass
+
     def to_dict(self):
         intersection = set(self.__table__.columns.keys()) & set(self.FIELDS)
         return dict(map(
@@ -37,9 +53,8 @@ class BaseModel(object):
                 intersection))
 
     FIELDS = {
-            'id': str,
-            'created': str,
-            'modified': str,
+        'created': alchemy.datetime_to_timestamp,
+        'modified': alchemy.datetime_to_timestamp,
     }
 
 Base = declarative_base(cls=BaseModel)
