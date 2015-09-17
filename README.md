@@ -27,7 +27,7 @@ Install required packages
 sudo apt-get install build-essential python-pip libffi-dev python-dev python3-dev libpq-dev
 ```
 
-Install virtualenvwrapper for Python 3.4
+Install virtualenvwrapper for Python 3.4 (in case you get an error `no suitable python virtual env tool found, aborting` while running an `install.sh` )
 
 ```
 sudo apt-get install python3.4-venv
@@ -63,33 +63,63 @@ Start server
   ./bin/run.sh start
 ```
 
+Deploy
+=====
+You might need to set `APP_ENV` enviroenment variable to load `conf/live.ini` configuration before deploying
+
+Linux
+------
+To run in live mode
+```shell
+export APP_ENV=live
+./bin/run.sh start
+```
+
+Heroku
+------
+Setting up a live configuration on Heroku (more details [here](https://devcenter.heroku.com/articles/config-vars))
+```shell
+heroku config:set APP_ENV=live
+```
+
 Usage
 =====
 
-- Create user
-```
+Create an user
+--------------
+- Request
+```shell
 curl -XPOST http://localhost:8000/v1/users -H "Content-Type: application/json" -d '{
  "username": "test1",
  "email": "test1@gmail.com",
  "password": "test1234"
 }'
+```
+
+- Response
+```json
 {
   "meta": {
+    "code": 200,
     "message": "OK",
-    "code": 200
   },
   "data": null
 }
 ```
 
-- Login user
-```
+Log in with email and password
+------------------------------
+- Request
+```shell
 curl -XGET http://localhost:8000/v1/users/self/login -d email=test1@gmail.com -d password=test1234
 {
   "meta": {
     "code": 200,
     "message": "OK"
   },
+```
+- Response
+```json
   "data": {
     "username": "test1",
     "token": "gAAAAABV-TpG0Gk6LhU5437VmJwZwgkyDG9Jj-UMtRZ-EtnuDOkb5sc0LPLeHNBL4FLsIkTsi91rdMjDYVKRQ8OWJuHNsb5rKw==",
@@ -101,13 +131,20 @@ curl -XGET http://localhost:8000/v1/users/self/login -d email=test1@gmail.com -d
 }
 ```
 
-- Check the validation of requested data
-```
+Check the validation of requested data
+--------------------------------------
+
+- Requset
+```shell
 curl -XPOST http://localhost:8000/v1/users -H "Content-Type: application/json" -d '{
  "username": "t",
  "email": "test1@gmail.c",
  "password": "123"
 }'
+```
+
+- Response
+```json
 {
   "meta": {
     "code": 88,
@@ -124,13 +161,20 @@ curl -XPOST http://localhost:8000/v1/users -H "Content-Type: application/json" -
 }
 ```
 
-- Database rollback error response
-```
+Get database rollback error in response for invalid data
+--------------------------------------------------------
+
+- Request
+```shell
 curl -XPOST http://localhost:8000/v1/users -H "Content-Type: application/json" -d '{
  "username": "test1",
  "email": "test1@gmail.com",
  "password": "test1234"
 }'
+```
+
+- Response
+```json
 {
   "meta": {
     "code": 77,
@@ -143,9 +187,14 @@ curl -XPOST http://localhost:8000/v1/users -H "Content-Type: application/json" -
 }
 ```
 
-- Get a collection of users with auth token
-```
+Get a collection of users with auth token
+-----------------------------------------
+- Request
+```shell
 curl -XGET http://localhost:8000/v1/users/100 -H "Authorization: gAAAAABV6Cxtz2qbcgOOzcjjyoBXBxJbjxwY2cSPdJB4gta07ZQXUU5NQ2BWAFIxSZlnlCl7wAwLe0RtBECUuV96RX9iiU63BP7wI1RQW-G3a1zilI3FHss="
+```
+- Response
+```json
 {
   "meta": {
     "code": 200,
