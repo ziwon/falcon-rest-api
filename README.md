@@ -88,7 +88,7 @@ Usage
 Create an user
 - Request
 ```shell
-curl -XPOST http://localhost:8000/v1/users -H "Content-Type: application/json" -d '{
+curl -XPOST http://localhost:5000/v1/users -H "Content-Type: application/json" -d '{
  "username": "test1",
  "email": "test1@gmail.com",
  "password": "test1234"
@@ -110,7 +110,7 @@ Log in with email and password
 
 - Request
 ```shell
-curl -XGET http://localhost:8000/v1/users/self/login -d email=test1@gmail.com -d password=test1234
+curl -XGET http://localhost:5000/v1/users/self/login -d email=test1@gmail.com -d password=test1234
 ```
 
 - Response
@@ -135,7 +135,7 @@ Check the validation of requested data
 
 - Requset
 ```shell
-curl -XPOST http://localhost:8000/v1/users -H "Content-Type: application/json" -d '{
+curl -XPOST http://localhost:5000/v1/users -H "Content-Type: application/json" -d '{
  "username": "t",
  "email": "test1@gmail.c",
  "password": "123"
@@ -164,7 +164,7 @@ Get database rollback error in response for invalid data
 
 - Request
 ```shell
-curl -XPOST http://localhost:8000/v1/users -H "Content-Type: application/json" -d '{
+curl -XPOST http://localhost:5000/v1/users -H "Content-Type: application/json" -d '{
  "username": "test1",
  "email": "test1@gmail.com",
  "password": "test1234"
@@ -189,7 +189,7 @@ Get a collection of users with auth token
 
 - Request
 ```shell
-curl -XGET http://localhost:8000/v1/users/100 -H "Authorization: gAAAAABV6Cxtz2qbcgOOzcjjyoBXBxJbjxwY2cSPdJB4gta07ZQXUU5NQ2BWAFIxSZlnlCl7wAwLe0RtBECUuV96RX9iiU63BP7wI1RQW-G3a1zilI3FHss="
+curl -XGET http://localhost:5000/v1/users/100 -H "Authorization: gAAAAABV6Cxtz2qbcgOOzcjjyoBXBxJbjxwY2cSPdJB4gta07ZQXUU5NQ2BWAFIxSZlnlCl7wAwLe0RtBECUuV96RX9iiU63BP7wI1RQW-G3a1zilI3FHss="
 ```
 
 - Response
