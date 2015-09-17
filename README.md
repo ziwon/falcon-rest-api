@@ -111,15 +111,15 @@ Log in with email and password
 - Request
 ```shell
 curl -XGET http://localhost:8000/v1/users/self/login -d email=test1@gmail.com -d password=test1234
+```
+
+- Response
+```json
 {
   "meta": {
     "code": 200,
     "message": "OK"
   },
-```
-
-- Response
-```json
   "data": {
     "username": "test1",
     "token": "gAAAAABV-TpG0Gk6LhU5437VmJwZwgkyDG9Jj-UMtRZ-EtnuDOkb5sc0LPLeHNBL4FLsIkTsi91rdMjDYVKRQ8OWJuHNsb5rKw==",
