@@ -9,10 +9,10 @@ except ImportError:
     OrderedDict = dict
 
 from app import log
-from app.utils.alchemy import  new_alchemy_encoder
+from app.utils.alchemy import new_alchemy_encoder
 from app.config import BRAND_NAME, POSTGRES
 from app.database import engine
-from app.errors import NotSupportedError, InvalidParameterError
+from app.errors import NotSupportedError
 
 LOG = log.get_logger()
 
@@ -28,9 +28,6 @@ class BaseResource(object):
 
     def from_db_to_json(self, db):
         return json.dumps(db, cls=new_alchemy_encoder())
-
-    def abort(self, status=falcon.HTTP_500, message=None):
-        raise falcon.HTTPError(status, message)
 
     def on_error(self, res, error=None):
         res.status = error['status']

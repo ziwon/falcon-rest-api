@@ -1,15 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import absolute_import
-
 from sqlalchemy import Column
 from sqlalchemy import DateTime, func
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
-from sqlalchemy.exc import SQLAlchemyError
 
 from app import log
 from app.utils import alchemy
-from app.errors import DatabaseError, ERR_UNKNOWN
 
 LOG = log.get_logger()
 
@@ -23,18 +19,8 @@ class BaseModel(object):
         return self.__name__.lower()
 
     @classmethod
-    def fields(cls):
-        l = []
-        for k in cls.FIELDS.keys():
-            l.append(cls.__dict__[k])
-        return l
-
-    @classmethod
     def find_one(cls, session, id):
-        try:
-            return session.query(cls).filter(cls.get_id() == id).one()
-        except SQLAlchemyError as ex:
-            raise DatabaseError(ERR_UNKNOWN, ex.args)
+        return session.query(cls).filter(cls.get_id() == id).one()
 
     @classmethod
     def find_update(cls, session, id, args):
@@ -49,7 +35,8 @@ class BaseModel(object):
         return dict(map(
             lambda key:
                 (key, 
-                    (lambda value: self.FIELDS[key](value) if value else None)(getattr(self, key))), 
+                    (lambda value: self.FIELDS[key](value) if value else None)
+                    (getattr(self, key))),
                 intersection))
 
     FIELDS = {

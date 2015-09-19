@@ -4,7 +4,7 @@ import re
 import falcon
 
 from sqlalchemy.orm.exc import NoResultFound
-from cerberus import Validator
+from cerberus import Validator, ValidationError
 
 from app import log
 from app.api.common import BaseResource
@@ -35,6 +35,10 @@ FIELDS = {
         'required': True,
         'minlength': 8,
         'maxlength': 64
+    },
+    'info': {
+        'type': 'dict',
+        'required': False
     }
 }
 
@@ -43,12 +47,16 @@ def validate_user_create(req, res, resource, params):
     schema = {
         'username': FIELDS['username'],
         'email': FIELDS['email'],
-        'password': FIELDS['password']
+        'password': FIELDS['password'],
+        'info': FIELDS['info']
     }
 
     v = Validator(schema)
-    if not v.validate(req.context['data']):
-        raise InvalidParameterError(v.errors)
+    try:
+        if not v.validate(req.context['data']):
+            raise InvalidParameterError(v.errors)
+    except ValidationError:
+        raise InvalidParameterError('Invalid Request %s' % req.context)
 
 
 class Collection(BaseResource):
@@ -64,6 +72,7 @@ class Collection(BaseResource):
             user.username = user_req['username']
             user.email = user_req['email']
             user.password = hash_password(user_req['password']).decode('utf-8')
+            user.info = user_req['info'] if 'info' in user_req else None
             sid = uuid()
             user.sid = sid
             user.token = encrypt_token(sid).decode('utf-8')
