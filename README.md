@@ -160,7 +160,7 @@ curl -XPOST http://localhost:5000/v1/users -H "Content-Type: application/json" -
 }
 ```
 
-Get database rollback error in response for invalid data
+Get database rollback error in response for duplicated data
 
 - Request
 ```shell
