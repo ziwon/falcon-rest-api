@@ -36,6 +36,8 @@ class DatabaseSessionManager(object):
                 raise DatabaseError(ERR_DATABASE_ROLLBACK, ex.args, ex.params)
 
         if self._scoped:
-            session.rollback()
+            # remove any database-loaded state from all current objects
+            # so that the next access of any attribute, or any query execution will retrieve new state
+            session.remove()
         else:
             session.close()
