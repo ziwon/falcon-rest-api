@@ -10,37 +10,6 @@ Requirements
 ============
 Make sure that you have already the required packages installed before beginning.
 
-Ubuntu
-------
-
-Update your system
-
-```
-sudo apt-get update
-sudo apt-get upgrade
-```
-
-Install required packages
-
-```
-sudo apt-get install build-essential python-pip libffi-dev python-dev python3-dev libpq-dev
-```
-
-Install virtualenvwrapper for Python 3.4 (in case you get an error `no suitable python virtual env tool found, aborting` while running an `install.sh` )
-
-```
-sudo apt-get install python3.4-venv
-```
-
-Mac
----
-
-Install `postgres` for `psycopg2` dependency
-```
-brew update
-brew install postgres
-```
-
 
 Installation
 ============
@@ -49,11 +18,6 @@ Install all the python module dependencies in requirements.txt
 
 ```
   ./install.sh
-```
-Activate virtualenv
-
-```
-  .venv/bin/activate
 ```
 
 Start server
