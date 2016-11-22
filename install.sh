@@ -1,36 +1,23 @@
 #!/usr/bin/env bash
-
-PYVENV=yes
+echo "Install required packages"
 
 case `uname` in
-  Linux )
-    pyvenv='/usr/bin/pyvenv-3.4'
+    Linux )
+        sudo apt-get update
+        sudo apt-get install build-essential python-pip libffi-dev python-dev python3-dev libpq-dev
+        ;;
+    Darwin )
+        brew update
+        brew install postgres
+        ;;
+    *)
+    exit 1
     ;;
-  Darwin )
-    echo 'You may need to install postgresql with "brew install postgresql"'
-    pyvenv='/usr/local/bin/pyvenv'
-    ;;
-  * )
-  exit 1
-  ;;
 esac
 
-$pyvenv -h > /dev/null 2>&1 || unset PYVENV
+type virtualenv >/dev/null 2>&1 || { echo >&2 "No suitable python virtual env tool found, aborting"; exit 1; }
 
-if [ -n "$PYVENV" ]; then
-  echo "pyvenv found.."
-else
-  echo "no suitable python virtual env tool found, aborting"
-  exit 1
-fi
-
-$pyvenv --without-pip .venv
-source .venv/bin/activate # Seems not work properly
-if [ ! -f .venv/bin/pip ]; then
-  # Due to Ubuntu 14.04 and Debian have a broken pyvenv-3.4 tool
-  echo "no pip found.. in .venv"
-  curl https://bootstrap.pypa.io/get-pip.py | python
-  deactivate
-  source .venv/bin/activate
-fi
+rm -rf .venv
+virtualenv -p python3 .venv
+source .venv/bin/activate
 pip install -r requirements.txt

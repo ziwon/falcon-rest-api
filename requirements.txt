@@ -1,10 +1,10 @@
-cython==0.22
-falcon==0.3
-gunicorn==19.3.0
-psycopg2==2.6.1
-sqlalchemy==1.0.8
+cython==0.25
+falcon==1.1.0
+gunicorn==19.6.0
+psycopg2==2.6.2
+sqlalchemy==1.1.4
 bcrypt==1.1.1
 itsdangerous==0.24
 shortuuid==0.4.2
-cryptography==0.9.3
+cryptography==1.5.3
 cerberus==0.9
