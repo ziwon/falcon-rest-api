@@ -2,9 +2,9 @@ Falcon REST API with PostgreSQL
 ===============================
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://falcon-rest-api.herokuapp.com)
 
-Simple Falcon Template with PostgreSQL for REST API 
+Simple REST API using falcon frameweork.
 
-(Falcon is a high-performance Python framework for building cloud APIs, smart proxies, and app backends. More information can be found [here](https://github.com/falconry/falcon/))
+Falcon is a high-performance Python framework for building cloud APIs, smart proxies, and app backends. More information can be found [here](https://github.com/falconry/falcon/).
 
 Requirements
 ============
