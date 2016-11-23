@@ -8,7 +8,7 @@ Simple Falcon Template with PostgreSQL for REST API
 
 Requirements
 ============
-Make sure that you have already the required packages installed before beginning.
+This project uses [virtualenv](https://virtualenv.pypa.io/en/stable/) as isolated Python environment for installation and running. Therefore, [virtualenv](https://virtualenv.pypa.io/en/stable/) must be installed. And you may need a related dependency library for a PostgreSQL database. See [install.sh](https://github.com/ziwon/falcon-rest-api/blob/master/install.sh) for details.
 
 
 Installation
