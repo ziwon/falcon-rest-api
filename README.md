@@ -28,11 +28,11 @@ Start server
 
 Deploy
 =====
-You might need to set `APP_ENV` enviroenment variable to load `conf/live.ini` configuration before deploying
+You need to set `APP_ENV` environment variables before deployment. You can set LIVE mode in Linux/Heroku as follows.
 
 Linux
 ------
-To run in live mode
+In Linux, just set `APP_ENV` to run in live mode.
 ```shell
 export APP_ENV=live
 ./bin/run.sh start
@@ -40,7 +40,7 @@ export APP_ENV=live
 
 Heroku
 ------
-Setting up a live configuration on Heroku (more details [here](https://devcenter.heroku.com/articles/config-vars))
+In Heroku, use the command `config:set`. (See [here](https://devcenter.heroku.com/articles/config-vars) for details)
 ```shell
 heroku config:set APP_ENV=live
 ```
