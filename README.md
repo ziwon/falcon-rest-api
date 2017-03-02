@@ -73,7 +73,10 @@ Log in with email and password
 
 - Request
 ```shell
-curl -XGET http://localhost:5000/v1/users/self/login -d email=test1@gmail.com -d password=test1234
+curl -XGET http://localhost:5000/v1/users/self/login -H "Content-Type: application/json" -d '{
+ "email": "test1@gmail.com",
+ "password": "test1234"
+}'
 ```
 
 - Response
