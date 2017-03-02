@@ -6,5 +6,5 @@ sqlalchemy==1.1.4
 bcrypt==1.1.1
 itsdangerous==0.24
 shortuuid==0.4.2
-cryptography==1.5.3
+cryptography==1.7.2
 cerberus==0.9
