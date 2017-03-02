@@ -1,6 +1,6 @@
 Falcon REST API with PostgreSQL
 ===============================
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://falcon-rest-api.herokuapp.com)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/ziwon/falcon-rest-api)
 
 Simple REST API using Falcon web framework.
 

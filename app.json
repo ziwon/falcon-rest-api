@@ -1,0 +1,9 @@
+{
+  "name": "Falcon REST API",
+  "repository": "https://github.com/ziwon/falcon-rest-api",
+  "env": {
+    "APP_ENV": "live",
+    "DATABASE_URL": "postgres://username:password@localhost/yourdb"
+  },
+  "keywords": ["python", "falcon", "postgresql", "sqlalchemy"]
+}
