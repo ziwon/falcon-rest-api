@@ -125,8 +125,9 @@ class Self(BaseResource):
             self.process_resetpw(req, res)
 
     def process_login(self, req, res):
-        email = req.params['email']
-        password = req.params['password']
+        data = req.context['data']
+        email = data['email']
+        password = data['password']
         session = req.context['session']
         try:
             user_db = User.find_by_email(session, email)
@@ -134,7 +135,6 @@ class Self(BaseResource):
                 self.on_success(res, user_db.to_dict())
             else:
                 raise PasswordNotMatch()
-
         except NoResultFound:
             raise UserNotExistsError('User email: %s' % email)
 
