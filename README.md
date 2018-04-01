@@ -99,7 +99,7 @@ curl -XGET http://localhost:5000/v1/users/self/login -H "Content-Type: applicati
 
 Check the validation of requested data
 
-- Requset
+- Request
 ```shell
 curl -XPOST http://localhost:5000/v1/users -H "Content-Type: application/json" -d '{
  "username": "t",
