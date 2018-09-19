@@ -1,7 +1,7 @@
 cython==0.25
 falcon==1.1.0
 gunicorn==19.6.0
-psycopg2==2.6.2
+psycopg2==2.7
 sqlalchemy==1.1.4
 bcrypt==1.1.1
 itsdangerous==0.24
