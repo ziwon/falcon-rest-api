@@ -21,8 +21,12 @@ class User(Base):
     sid = Column(String(UUID_LEN), nullable=False)
 
     def __repr__(self):
-        return "<User(name='%s', email='%s', token='%s', info='%s')>" % \
-            (self.username, self.email, self.token, self.info)
+        return "<User(name='%s', email='%s', token='%s', info='%s')>" % (
+            self.username,
+            self.email,
+            self.token,
+            self.info,
+        )
 
     @classmethod
     def get_id(cls):
@@ -32,11 +36,6 @@ class User(Base):
     def find_by_email(cls, session, email):
         return session.query(User).filter(User.email == email).one()
 
-    FIELDS = {
-        'username': str,
-        'email': str,
-        'info': alchemy.passby,
-        'token': str
-    }
+    FIELDS = {"username": str, "email": str, "info": alchemy.passby, "token": str}
 
     FIELDS.update(Base.FIELDS)

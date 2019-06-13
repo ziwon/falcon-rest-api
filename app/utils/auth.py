@@ -3,8 +3,8 @@
 import bcrypt
 import shortuuid
 
-from itsdangerous import TimestampSigner
-from itsdangerous import SignatureExpired, BadSignature
+from itsdangerous.timed import TimestampSigner
+from itsdangerous.timed import BadTimeSignature, SignatureExpired
 from cryptography.fernet import Fernet, InvalidToken
 
 from app.config import SECRET_KEY, TOKEN_EXPIRES, UUID_LEN, UUID_ALPHABET
@@ -21,24 +21,24 @@ def uuid():
 
 
 def encrypt_token(data):
-        encryptor = get_common_key()
-        return encryptor.encrypt(data.encode('utf-8'))
+    encryptor = get_common_key()
+    return encryptor.encrypt(data.encode("utf-8"))
 
 
 def decrypt_token(token):
     try:
         decryptor = get_common_key()
-        return decryptor.decrypt(token.encode('utf-8'))
+        return decryptor.decrypt(token.encode("utf-8"))
     except InvalidToken:
         return None
 
 
 def hash_password(password):
-    return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
 
 
 def verify_password(password, hashed):
-    return bcrypt.hashpw(password.encode('utf-8'), hashed) == hashed
+    return bcrypt.hashpw(password.encode("utf-8"), hashed) == hashed
 
 
 def generate_timed_token(user_dict, expiration=TOKEN_EXPIRES):

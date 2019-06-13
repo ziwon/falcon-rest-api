@@ -20,13 +20,13 @@ class DatabaseSessionManager(object):
         """
         Handle post-processing of the response (after routing).
         """
-        req.context['session'] = self._session_factory
+        req.context["session"] = self._session_factory
 
-    def process_response(self, req, res, resource=None):
+    def process_response(self, req, res, resource=None, req_succeeded=None):
         """
         Handle post-processing of the response (after routing).
         """
-        session = req.context['session']
+        session = req.context["session"]
 
         if config.DB_AUTOCOMMIT:
             try:

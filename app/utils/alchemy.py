@@ -21,12 +21,15 @@ def new_alchemy_encoder():
 
                 # an SQLAlchemy class
                 fields = {}
-                for field in [x for x in dir(obj) if not x.startswith('_') and x != 'metadata']:
+                for field in [
+                    x for x in dir(obj) if not x.startswith("_") and x != "metadata"
+                ]:
                     fields[field] = obj.__getattribute__(field)
                 # a json-encodable dict
                 return fields
 
             return json.JSONEncoder.default(self, obj)
+
     return AlchemyEncoder
 
 
